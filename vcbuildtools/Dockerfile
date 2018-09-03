@@ -13,4 +13,12 @@ RUN choco install visualstudio2017buildtools -y \
     && pip install conan \
     && pip install conan_package_tools
 
+# Conan environment configuration
+RUN setx /M CONAN_VISUAL_VERSIONS 15 \
+    && setx /M CONAN_ARCHS x86_64 \
+    && setx /M CONAN_VISUAL_RUNTIMES MD \
+    && setx /M CONAN_REMOTES http://5.39.78.163:8081/artifactory/api/conan/conan-local@False@fw4spl-conan \
+    && setx /M CONAN_UPLOAD http://5.39.78.163:8081/artifactory/api/conan/conan-local
+
+WORKDIR C:\\build
 CMD [ "cmd.exe" ]
