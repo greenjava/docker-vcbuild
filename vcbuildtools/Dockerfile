@@ -1,19 +1,16 @@
-FROM microsoft/windowsservercore
+FROM microsoft/windowsservercore:10.0.14393.1715
 
-SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+# Install chocolatey
+RUN @powershell -NoProfile -ExecutionPolicy unrestricted -Command "(iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))) >$null 2>&1"
 
-RUN Invoke-WebRequest 'http://download.microsoft.com/download/5/f/7/5f7acaeb-8363-451f-9425-68a90f98b238/visualcppbuildtools_full.exe' -OutFile 'visualcppbuildtools_full.exe' -UseBasicParsing ; \
-    Start-Process .\visualcppbuildtools_full.exe -ArgumentList '/NoRestart /S' -Wait ; \
-    Remove-Item visualcppbuildtools_full.exe
+# Install Visual Studio 2017, Python3, CMake, Git and Conan
+RUN choco install visualstudio2017buildtools -y \
+    && choco install visualstudio2017-workload-vctools -y \
+    && choco install python -y \
+    && choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' -y \
+    && choco install git -y \
+    && RefreshEnv \
+    && pip install conan \
+    && pip install conan_package_tools
 
-RUN Write-Host 'Configuring environment'; \
-	pushd 'C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC' ; \
-	cmd /c 'vcvarsall.bat amd64&set' | foreach { \
-    if ($_ -match '=') { \
-      $v = $_.split('='); \
-      [Environment]::SetEnvironmentVariable($v[0], $v[1], [EnvironmentVariableTarget]::Machine); \
-    } \
-  } ; \
-	popd
-
-WORKDIR 
+CMD [ "cmd.exe" ]
