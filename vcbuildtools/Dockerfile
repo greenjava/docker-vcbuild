@@ -1,4 +1,4 @@
-FROM microsoft/windowsservercore:10.0.14393.1715
+FROM microsoft/windowsservercore:1803
 
 # Install chocolatey
 RUN @powershell -NoProfile -ExecutionPolicy unrestricted -Command "(iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))) >$null 2>&1"
