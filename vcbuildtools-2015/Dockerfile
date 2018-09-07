@@ -4,7 +4,7 @@ FROM microsoft/windowsservercore:1803
 RUN @powershell -NoProfile -ExecutionPolicy unrestricted -Command "(iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))) >$null 2>&1"
 
 # Install Visual Studio 2015, Python3, CMake, Git and Conan
-RUN choco install -y visualcppbuildtools -packageParameters "--Features Windows10_ToolsAndSDKV13" \
+RUN choco install -y visualcppbuildtools -packageParameters "--Features Windows10_ToolsAndSDKV13,VisualCppBuildTools_ATLMFC_SDK" \
     && choco install python -y \
     && choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' -y \
     && choco install git -y \
